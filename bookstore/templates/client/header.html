@@ -127,8 +127,11 @@
       </div>
       <div class="modal-body" id="main-cart-content">
 
-
       </div>
+
+          <img src="{{ url_for('static',filename='empty_cart.webp') }}" class="img img-responsive mx-auto" alt="Error" id="empty_cart_img">
+
+          <img src="{{ url_for('static',filename='success_shipping.png') }}" class="img img-responsive mx-auto" alt="Error" id="order-success" style="display: none; height: 300px;width: 300px" >
 
 
         <div class="totalPrice mx-5" style="float:right; font-weight: bold" >
@@ -136,8 +139,8 @@
         </div>
         
       <div class="modal-footer">
-        <a href="#!" class="btn btn-success py-2" id="checkout">Proceed to Checkout</a>
-        <a href="#!" class="btn btn-info py-2" id="empty_cart">Empty My Cart</a>
+        <button type="button" class="btn btn-success py-2" id="checkout">Proceed to Checkout</a>
+        <button type="button" class="btn btn-info py-2" id="empty_cart">Empty My Cart</a>
         <button type="button" class="btn btn-danger py-2" data-dismiss="modal">Cancel</button>
       </div>
     </div>

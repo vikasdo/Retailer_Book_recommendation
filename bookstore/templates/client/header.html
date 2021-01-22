@@ -136,8 +136,9 @@
         </div>
         
       <div class="modal-footer">
-        <a href="#!" class="btn btn-success" id="checkout" disabled>Proceed to Checkout</a>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <a href="#!" class="btn btn-success py-2" id="checkout">Proceed to Checkout</a>
+        <a href="#!" class="btn btn-info py-2" id="empty_cart">Empty My Cart</a>
+        <button type="button" class="btn btn-danger py-2" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
@@ -147,7 +148,7 @@
 
 
 </div>
-
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ url_for('static',filename='helper.js') }}"></script>

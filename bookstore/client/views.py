@@ -1,5 +1,5 @@
 import flask
-from flask import render_template, url_for, request, redirect, flash, session, jsonify, Blueprint ,Response
+from flask import render_template, url_for,request, redirect, flash, session, jsonify, Blueprint ,Response
 from flask_login import login_required, current_user, login_user, logout_user,login_manager,LoginManager
 from werkzeug.security import check_password_hash
 from datetime import datetime
@@ -11,6 +11,7 @@ from bookstore import db, serializer, app
 from werkzeug.security import generate_password_hash
 from bookstore.client.recommendation_engine import Recommendation_engine
 # create A Blueprint
+import json
 
 client = Blueprint('client', __name__)
 
@@ -96,6 +97,21 @@ def addBook():
 
     return render_template('client/adminBook.html')
 
+
+
+
+@app.route('/transaction',methods=["GET","POST"])
+@login_required
+def transaction():
+
+    if request.method=="POST":
+        data=request.form["order"]
+
+        print(type(json.loads(data)))
+
+
+    return render_template("client/index.html")
+
 @app.route('/single_product/<string:bookid>',methods = ['GET','POST'])
 @login_required
 def single_product(bookid):
@@ -114,10 +130,9 @@ def single_product(bookid):
 
         print(book_id)
 
-        ok = Ratings.query.filter_by(user_id=user_id).first();
+        ok = Ratings.query.filter_by(user_id=user_id).filter_by(book_id=book_id).first();
 
         if not ok: 
-
             red = Ratings(user_id=user_id,rating=user_rating,book_id=book_id)
             db.session.add(red)
             db.session.commit();

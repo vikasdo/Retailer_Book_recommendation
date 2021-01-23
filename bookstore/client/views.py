@@ -6,7 +6,7 @@ from datetime import datetime
 # import pandas as pd
 import glob,json,re
 import os,pickle,collections
-from bookstore.models import User,Books,Ratings
+from bookstore.models import User,Books,Ratings,Transaction
 from bookstore import db, serializer, app
 from werkzeug.security import generate_password_hash
 from bookstore.client.recommendation_engine import Recommendation_engine
@@ -98,16 +98,22 @@ def addBook():
     return render_template('client/adminBook.html')
 
 
-
+import ast
 
 @app.route('/transaction',methods=["GET","POST"])
 @login_required
 def transaction():
 
     if request.method=="POST":
-        data=request.form["order"]
+        data=json.loads(request.form["order"])
+        total =request.form["total-price"]
 
-        print(type(json.loads(data)))
+        for key,value in data.items():
+            value=ast.literal_eval(value) 
+            frd = Transaction(book_ISBN=key,quantity=value[1],user_id=current_user.id,total_price=total)
+            db.session.add(frd) 
+            db.session.commit() 
+
 
 
     return render_template("client/index.html")

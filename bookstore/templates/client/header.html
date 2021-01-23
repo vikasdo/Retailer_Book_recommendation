@@ -79,8 +79,9 @@
 </nav>
 <!-- Navbar -->
 
+<!--Hidden Data -->
 <p id="session-data" data-session="{{current_user.id}}"></p>
-
+<p id="total_price" style="display: none;"></p>
 
 <div class="loader">
 </div>
@@ -134,8 +135,9 @@
           <img src="{{ url_for('static',filename='success_shipping.png') }}" class="img img-responsive mx-auto" alt="Error" id="order-success" style="display: none; height: 300px;width: 300px" >
 
 
-        <div class="totalPrice mx-5" style="float:right; font-weight: bold" >
+        <div class="totalPrice mx-5 dets" style="float:right; font-weight: bold" >
           <p id="total-item-price"></p>
+          <p id="order-value"></p>
         </div>
         
       <div class="modal-footer">

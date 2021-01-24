@@ -152,10 +152,12 @@ class Recommendation_engine:
          
     self.df_data=pd.read_pickle(path_for_pkl)
     self.book=pd.read_pickle(path_for_pkl_books)
+    self.book=self.book.reset_index(drop=True)
+
   def getRecommendedBooks(self,user_id):
 
 
-    
+    print(user_id)
     out=recommendItem(user_id,self.df_data,self.book)
     book=self.book.loc[self.book['ISBN'].isin(out)]
 

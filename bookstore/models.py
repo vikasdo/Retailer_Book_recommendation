@@ -42,24 +42,23 @@ class Ratings(db.Model):
 	rid = db.Column(db.Integer,primary_key=True)
 	rating = db.Column(db.Integer,default=0) 
 	user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
-	book_id = db.Column(db.Integer,db.ForeignKey('books.bid'))
+	book_id = db.Column(db.String(100),db.ForeignKey('books.ISBN'))
 
 
 	def __repr__(self):
 		return f"Ratings('{self.book_id}','{self.user_id}','{self.rating}')"
 
-
 '''
-class Cart(UserMixin,db.Model):
-	cart_id = db.Column(db.Integer,primary_key=True)
-	total_amount = db.Column(db.Integer,nullable=False)
-
-class Payment(UserMixin,db.Model):
-	payment_id = db.Column(db.Integer,primary_key=True)
-	cart_id = db.relationship()
-	user_id = db.relationship()
-	payment_type = db.Column(db.String(255),nullable=False,default="Online")
-
+class Cart(db.Model):
+	cid = db.Column(db.Integer,primary_key=True)
+	book_id = db.Column(db.Integer,db.ForeignKey('books.bid'))
+	quantity = db.Column(db.Integer,nullable=False)
+	#transaction = db.Column(db.Integer,db.ForeignKey('transaction.tid')) # the tid involved
 '''
-
-
+# it will have many cart items and total price
+class Transaction(db.Model):
+	tid = db.Column(db.Integer,primary_key=True)
+	book_ISBN = db.Column(db.String(100),db.ForeignKey('books.bid'))
+	quantity = db.Column(db.Integer,nullable=False)
+	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
+	total_price = db.Column(db.Integer,nullable=False)

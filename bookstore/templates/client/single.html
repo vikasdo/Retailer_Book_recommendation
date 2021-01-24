@@ -3,7 +3,7 @@
     <div class="col-lg-12 ">
         <div class="row shadow p-3">
         <div class="col-lg-4 p-4 " style="justify-content: center;">
-            <img src="{{ books.bookImage }}" class="img img-fluid" alt="SOS">
+            <img src="{{ books.bookImage }}" style="width:300px;height: 300px;" class="img img-fluid img-responsive mx-auto d-block" alt="SOS">
         </div>
         <div class="col-lg-6 text-center">
             <b>Title: </b> <span id="item-name">{{books.title}}</span><br>
@@ -43,34 +43,30 @@
 
     <!-- Recommended -->
 <h2 class="py-4">Checkout other Books ... </h2>  
-    <div class="d-flex justify-content-center flex-wrap">
-          
-    {% for idx,rows in suggestedBooks.iterrows() %}
-    <div class="card shadow bg-sucess">
-        <div class="card-img-top">
-            <img src="{{ rows.imageUrlL }}" class="img img-fluid" alt="Something to Show" style="width:300px;height: 200px;">
-        </div>
-        <div class="card-body">
-            <div class="card-title">
-                <h4>{{rows.bookTitle}}</h4>
-            </div>
-                <div class="card-text">
-                <p style="font-size:6vw">
+    <div class="" style="display: flex;justify-content: flex-start;align-items: flex-start; flex-wrap:wrap;" >
 
-                    <div class="book-author">
-                        <b>author:</b> {{ rows.bookAuthor }}<br>
-                    </div>
-                    <div class="book-publisher">
-                        <b>publisher:</b> {{ rows.publisher }}<br>
-                    </div>
-                  <!--  <b>Price:</b> {{rows.book_cost}} $<br>-->
-                </p>
+
+    {% for idx,rows in suggestedBooks.iterrows() %}
+        <div class="card shadow " style="margin-right: 10px ;margin-bottom: 10px">
+            <div class="card-img-top">
+                <img src="{{ rows.imageUrlL }}" class="img img-thumbnail img-responsive mx-auto d-block" style="height: 300px" alt="something">
+            </div>
+            <div class="card-body">
+                <div class="card-title" style="width:300px;height: auto"><h6>{{rows.bookTitle}}</h6></div>
+                <div class="card-text">
+                <h6>
+
+                        <b>{{ rows.bookAuthor }}</b><br>
+                         {{ rows.publisher }}<br>
+                </h6>
                 </div>
-                <a href="{{ url_for('single_product',bookid=rows.ISBN ) }}" class="btn btn-dark stretched-link">View Product</a>
+                
+
+                <a href="{{ url_for('single_product',bookid=rows.ISBN ) }}" class="btn btn-md btn-dark stretched-link">View Product</a>
             </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
+
 
     </div>
 {% endblock %}

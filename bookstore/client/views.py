@@ -1,16 +1,17 @@
 import flask
-from flask import render_template, url_for, request, redirect, flash, session, jsonify, Blueprint ,Response
+from flask import render_template, url_for,request, redirect, flash, session, jsonify, Blueprint ,Response
 from flask_login import login_required, current_user, login_user, logout_user,login_manager,LoginManager
 from werkzeug.security import check_password_hash
 from datetime import datetime
 # import pandas as pd
 import glob,json,re
 import os,pickle,collections
-from bookstore.models import User,Books,Ratings
+from bookstore.models import User,Books,Ratings,Transaction
 from bookstore import db, serializer, app
 from werkzeug.security import generate_password_hash
 from bookstore.client.recommendation_engine import Recommendation_engine
 # create A Blueprint
+import json
 
 client = Blueprint('client', __name__)
 
@@ -96,6 +97,27 @@ def addBook():
 
     return render_template('client/adminBook.html')
 
+
+import ast
+
+@app.route('/transaction',methods=["GET","POST"])
+@login_required
+def transaction():
+
+    if request.method=="POST":
+        data=json.loads(request.form["order"])
+        total =request.form["total-price"]
+
+        for key,value in data.items():
+            value=ast.literal_eval(value) 
+            frd = Transaction(book_ISBN=key,quantity=value[1],user_id=current_user.id,total_price=total)
+            db.session.add(frd) 
+            db.session.commit() 
+
+
+
+    return render_template("client/index.html")
+
 @app.route('/single_product/<string:bookid>',methods = ['GET','POST'])
 @login_required
 def single_product(bookid):
@@ -114,10 +136,9 @@ def single_product(bookid):
 
         print(book_id)
 
-        ok = Ratings.query.filter_by(user_id=user_id).first();
+        ok = Ratings.query.filter_by(user_id=user_id).filter_by(book_id=book_id).first();
 
         if not ok: 
-
             red = Ratings(user_id=user_id,rating=user_rating,book_id=book_id)
             db.session.add(red)
             db.session.commit();

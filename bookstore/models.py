@@ -38,13 +38,12 @@ class Books(db.Model):
 	def __repr__(self):
 		return f"Books('{self.ISBN}','{self.title}','{self.bookImage}','{self.book_cost}')"
 
-class Ratings(db.Model):
+class Ratings(db.Model): 
 	rid = db.Column(db.Integer,primary_key=True)
 	rating = db.Column(db.Integer,default=0) 
 	user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
 	book_id = db.Column(db.String(100),db.ForeignKey('books.ISBN'))
-
-
+	
 	def __repr__(self):
 		return f"Ratings('{self.book_id}','{self.user_id}','{self.rating}')"
 
@@ -56,7 +55,8 @@ class Cart(db.Model):
 	#transaction = db.Column(db.Integer,db.ForeignKey('transaction.tid')) # the tid involved
 '''
 # it will have many cart items and total price
-class Transaction(db.Model):
+
+class OrderList(db.Model):
 	tid = db.Column(db.Integer,primary_key=True)
 	book_ISBN = db.Column(db.String(100),db.ForeignKey('books.bid'))
 	quantity = db.Column(db.Integer,nullable=False)

@@ -5,7 +5,7 @@
         <h2>An Online Book store</h2>
     </div>
     
-<div class="card shadow" style="display: flex;justify-content: flex-start;align-items: flex-start;flex-wrap: wrap;flex-direction: row">
+<div class="card shadow p-3" style="display: flex;justify-content: flex-start;align-items: flex-start;flex-wrap: wrap;flex-direction: row">
     
     {% for book in books %}
     <div class="card shadow" style="margin-right:10px; margin-bottom: 10px;">
@@ -25,7 +25,6 @@
                 <a href="{{ url_for('single_product',bookid=book.ISBN ) }}" class="btn btn-dark stretched-link">View Product</a>
             </div>
         </div>
-                <a href="{{ url_for('single_product',bookid=book.ISBN ) }}" class="btn btn-dark stretched-link">View Product</a>
     </div>
     {% endfor %}
 

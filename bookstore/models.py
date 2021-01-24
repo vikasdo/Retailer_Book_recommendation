@@ -62,3 +62,26 @@ class OrderList(db.Model):
 	quantity = db.Column(db.Integer,nullable=False)
 	user_id=db.Column(db.Integer,db.ForeignKey('user.id'))
 	total_price = db.Column(db.Integer,nullable=False)
+
+
+'''
+
+
+
+ORDERS
+	
+	SELECT book_ISBN,SUM(quantity)*110 as revenue from order_list 
+	group by(book_ISBN) ORDER BY revenue DESC LIMIT 5
+
+RATINGS 
+
+	SELECT book_id,AVG(rating) as red from ratings group by(book_id) ORDER BY red DESC TOP 4
+
+USERS LOCATION GROUP BY
+
+	SELECT us.email,us.location from user us,order_list ol where ol.user_id=us.id group by(us.location) order by count(location) DESC 
+
+AVG RATING IN GIVEN LOCATION
+	
+
+'''

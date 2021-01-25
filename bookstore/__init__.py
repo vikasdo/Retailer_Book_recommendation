@@ -5,8 +5,8 @@ from flask_basicauth import BasicAuth
 from flask_cors import CORS, cross_origin
 import os
 
-# from flask_admin import Admin, AdminIndexView
-# from flask_admin.contrib.sqla import ModelView
+from flask_admin import Admin,AdminIndexView
+from flask_admin.contrib.sqla import ModelView
 from flask_sqlalchemy import SQLAlchemy  as _BaseSQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
@@ -80,9 +80,10 @@ serializer = URLSafeSerializer(app.secret_key)
 
 
 
-
 # Here we set session_token as our user_loader.
 
 from bookstore.client.views import client
+# from bookstore.admin.views import admin
 
 app.register_blueprint(client)
+# app.register_blueprint(myadmin, url_prefix='/admin')

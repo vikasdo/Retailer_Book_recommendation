@@ -1,5 +1,5 @@
 import flask
-from flask import render_template, url_for,request, redirect, flash, session, jsonify, Blueprint ,Response
+from flask import render_template,jsonify, url_for,request, redirect, flash, session, jsonify, Blueprint ,Response
 from flask_login import login_required, current_user, login_user, logout_user,login_manager,LoginManager
 from werkzeug.security import check_password_hash
 from datetime import datetime
@@ -12,6 +12,9 @@ from werkzeug.security import generate_password_hash
 from bookstore.client.recommendation_engine import Recommendation_engine
 # create A Blueprint
 import json
+import sqlite3
+#connection obj
+
 
 client = Blueprint('client', __name__)
 
@@ -27,6 +30,80 @@ login_manager.init_app(app)
 def home():
     books = Books.query.limit(15).all()
     return  render_template("client/index.html",books=books)
+
+
+
+
+# returns JSON Object as response
+@app.route('/get_data')
+def get_data():
+    
+    data={}
+
+    #1 earning 
+    conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
+    cur1 = conn.execute("SELECT SUM(quantity)*110 from order_list")
+    
+    for x in cur1:
+        data["earnings"]= x[0]
+
+    #2 Top 5 book revenue
+
+    cur2 = conn.execute('''SELECT book_ISBN,SUM(quantity)*110 as revenue from order_list 
+    group by(book_ISBN) ORDER BY revenue DESC LIMIT 5''')
+
+    tmp={}
+
+    for row in cur2:
+        tmp[row[0]]=row[1]
+
+    data["book_revenue"]=tmp
+
+    #3 Top 4 Average book ratings
+
+    cur3 = conn.execute('''SELECT book_id,ROUND(AVG(rating),3) as red from ratings group by(book_id) ORDER BY red DESC LIMIT 4''')
+
+    tmp={}
+
+    for row in cur3:
+        tmp[row[0]]=float(row[1])
+
+    data["avg_ratings"]=tmp
+
+    #4 total users
+
+    cur4 = conn.execute('''SELECT DISTINCT COUNT(*) from user
+    ''')
+
+    for s in cur4:
+        data["total_users"]=s[0]
+
+
+    #5 total Books Rated 
+
+    curr5=conn.execute("""SELECT DISTINCT COUNT(book_id) FROM ratings""")
+
+    for t in curr5:
+        data["books_reviewed"]=t;
+
+    #6 total Transactions Perfomed till now
+
+    curr6 = conn.execute('''SELECT COUNT(*) from order_list''')
+
+    for t in curr6:
+        data["total_transactions"]=t;
+
+
+
+    conn.close()
+    return data
+
+@app.route('/dashboard')
+def dashboard():
+    data = get_data()
+    print(data)
+    return render_template('index.html',data = data)
+
 
 
 @app.route('/login' , methods=['GET' , 'POST'])

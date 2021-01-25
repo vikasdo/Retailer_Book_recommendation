@@ -41,8 +41,7 @@ class Books(db.Model):
 class offer(db.Model):
 	offerid = db.Column(db.Integer,primary_key=True)
 	user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
-	book_id = db.Column(db.String(100),db.ForeignKey('books.ISBN'))
-	book_cost=db.Column(db.Integer,db.ForeignKey('user.id'))
+	discount=db.Column(db.Integer,db.ForeignKey('user.id'))
 
 class Ratings(db.Model): 
 	rid = db.Column(db.Integer,primary_key=True)

@@ -94,7 +94,16 @@ def get_data():
         data["total_transactions"]=t;
 
 
-
+    #7 Data By Age groups
+    age_limit,age_group = {"young_age":[20,30],"middle_age":[40,50],"old_age":[60,70]},{}
+    
+    for key,value in age_limit.items():
+        curr7 = conn.execute(f'''SELECT COUNT(*) FROM USER WHERE AGE BETWEEN {value[0]} AND {value[1]}''')
+        for y in curr7:
+            age_group[key]=y[0];
+    
+    data["age_group"]=age_group
+    
     conn.close()
     return data
 

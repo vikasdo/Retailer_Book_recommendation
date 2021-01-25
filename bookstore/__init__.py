@@ -5,8 +5,8 @@ from flask_basicauth import BasicAuth
 from flask_cors import CORS, cross_origin
 import os
 
-from flask_admin import Admin,AdminIndexView
-from flask_admin.contrib.sqla import ModelView
+# from flask_admin import Admin,AdminIndexView
+# from flask_admin.contrib.sqla import ModelView
 from flask_sqlalchemy import SQLAlchemy  as _BaseSQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager

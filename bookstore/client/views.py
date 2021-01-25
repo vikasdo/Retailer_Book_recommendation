@@ -3,7 +3,7 @@ from flask import render_template,jsonify, url_for,request, redirect, flash, ses
 from flask_login import login_required, current_user, login_user, logout_user,login_manager,LoginManager
 from werkzeug.security import check_password_hash
 from datetime import datetime
-# import pandas as pd
+import pandas as pd
 import glob,json,re
 import os,pickle,collections
 from bookstore.models import User,Books,Ratings,OrderList
@@ -111,6 +111,17 @@ def get_data():
         for loc in curr8:
             user_country[uc]=loc[0]
     data["user_country"]=user_country
+
+    #9 Personalized Offers Data
+
+    '''personalized_offers=[]
+    curr9 = conn.execute("""SELECT us.id,us.email,us.name,us.location,COUNT(*) AS Purchases FROM order_list o ,user us WHERE us.id=o.user_id GROUP BY(o.user_id) HAVING Purchases>=3""")
+    print(curr9[0])
+    for po in curr9:
+        print(po[0])
+    personalized_offers.append(po[1])
+    data["personalized_offers"]=personalized_offers
+    print(personalized_offers)'''
 
     conn.close()
     return data
@@ -283,7 +294,9 @@ def logout():
 
 @app.route('/personalized_offers')
 def personalized_offers():
-        return render_template('tables.html')
+        conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
+        personalized_offers = pd.read_sql_query('SELECT us.id,us.email,us.name,us.location,COUNT(*) AS Purchases FROM order_list o ,user us WHERE us.id=o.user_id GROUP BY(o.user_id) HAVING Purchases>=3', conn) 
+        return render_template('test.html',data=personalized_offers)
 
 
 @login_manager.user_loader

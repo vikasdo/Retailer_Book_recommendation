@@ -281,6 +281,11 @@ def logout():
 
 
 
+@app.route('/personalized_offers')
+def personalized_offers():
+        return render_template('tables.html')
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))

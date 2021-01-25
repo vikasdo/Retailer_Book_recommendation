@@ -49,14 +49,14 @@
     {% for idx,rows in suggestedBooks.iterrows() %}
         <div class="card shadow " style="margin-right: 10px ;margin-bottom: 10px">
             <div class="card-img-top">
-                <img src="{{ rows.bookImage }}" class="img img-thumbnail img-responsive mx-auto d-block" style="height: 300px" alt="something">
+                <img src="{{ rows.imageUrlL }}" class="img img-thumbnail img-responsive mx-auto d-block" style="height: 300px" alt="something">
             </div>
             <div class="card-body">
-                <div class="card-title" style="width:300px;height: auto"><h6>{{rows.title}}</h6></div>
+                <div class="card-title" style="width:300px;height: auto"><h6>{{rows.bookTitle}}</h6></div>
                 <div class="card-text">
                 <h6>
 
-                        <b>{{ rows.author }}</b><br>
+                        <b>{{ rows.bookAuthor }}</b><br>
                          {{ rows.publisher }}<br>
                 </h6>
                 </div>

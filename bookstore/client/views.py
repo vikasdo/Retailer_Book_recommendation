@@ -264,6 +264,8 @@ def single_product(bookid):
     pickle.dump(pickled_data,outfile)
     outfile.close()
 
+    print(out.columns)
+
     return render_template('client/single.html',books=books,suggestedBooks=out)
 
 

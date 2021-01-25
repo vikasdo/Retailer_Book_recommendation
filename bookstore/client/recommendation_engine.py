@@ -25,7 +25,7 @@ def recommendItem(user_id, ratings,books, metric=metric):
         prediction=[]
         
         ## Item based
-        if ratings.loc[user_id].value_counts()[0]> (ratings.shape[1])/2  : #that means the user didn't rate
+        if ratings.loc[user_id].value_counts()[0]> 1 : #that means the user didn't rate
           print("switching to  Item based _content")
           for i in range(ratings.shape[1]):
                               if (ratings[str(ratings.columns[i])][user_id] !=0): #not rated already

@@ -472,7 +472,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview(Top 5 Book Earnings)</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -491,7 +491,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
+                                        <canvas id="Barchart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -749,9 +749,106 @@
 			<script src="{{ url_for('static', filename = 'vendor/chart.js/Chart.min.js') }}"></script>
 			<script src="{{ url_for('static', filename = 'js/demo/chart-area-demo.js') }}"></script>
 			<script src="{{ url_for('static', filename = 'js/demo/chart-pie-demo.js') }}"></script>
+                <!-- <script src="js/demo/chart-bar-demo.js"></script> -->
+            <script src="{{ url_for('static', filename = 'js/demo/chart-bar-demo.js') }}"></script>
 
-   
+
+
+   <script type="text/javascript">
+       
+
+
+
+{% if data %}
+
+var arr=[    {% for  i in  range(data["book_revenue"]|length) %}{  {% for  k,v in  data["book_revenue"].items() %}"{{k}}":{{v}},{%endfor%}  }, {%endfor%} ];
+
+// Bar Chart Example
+var ctx = document.getElementById("Barchart");
+var myBarChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: Object.keys(arr[0]).map(function (key) { return key; }),
+    datasets: [{
+      label: "Revenue",
+      backgroundColor: "#4e73df",
+      hoverBackgroundColor: "#2e59d9",
+      borderColor: "#4e73df",
+      data:  [{%for vals in data["book_revenue"].values()%}{{vals}},{%endfor%} ]
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 25,
+        top: 25,
+        bottom: 0
+      }
+    },
+    scales: {
+      xAxes: [{
+        time: {
+          unit: 'Book'
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false
+        },
+        ticks: {
+          maxTicksLimit: 6
+        },
+        maxBarThickness: 25,
+      }],
+      yAxes: [{
+        ticks: {
+          min: 0,
+          max: 5000,
+          maxTicksLimit: 5,
+          padding: 10,
+          // Include a dollar sign in the ticks
+          callback: function(value, index, values) {
+            return 'Rupee' + number_format(value);
+          }
+        },
+        gridLines: {
+          color: "rgb(234, 236, 244)",
+          zeroLineColor: "rgb(234, 236, 244)",
+          drawBorder: false,
+          borderDash: [2],
+          zeroLineBorderDash: [2]
+        }
+      }],
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      titleMarginBottom: 10,
+      titleFontColor: '#6e707e',
+      titleFontSize: 14,
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      borderColor: '#dddfeb',
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      caretPadding: 10,
+      callbacks: {
+        label: function(tooltipItem, chart) {
+          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+          return datasetLabel + ': Rupees ' + number_format(tooltipItem.yLabel);
+        }
+      }
+    },
+  }
+});
+{%endif %}
+   </script>
 
 </body>
+
 
 </html>

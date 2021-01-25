@@ -93,7 +93,6 @@ def get_data():
     for t in curr6:
         data["total_transactions"]=t;
 
-
     #7 Data By Age groups
     age_limit,age_group = {"young_age":[20,30],"middle_age":[40,50],"old_age":[60,70]},{}
     
@@ -103,7 +102,16 @@ def get_data():
             age_group[key]=y[0];
     
     data["age_group"]=age_group
-    
+
+    #8 User Country
+
+    user_country={'usa':0,'germany':0,'canada':0,'united kingdom':0,'malaysia':0,'spain':0,'france':0}
+    for uc in user_country.keys():
+        curr8 = conn.execute(f"""SELECT COUNT(location) FROM USER WHERE location LIKE '%{uc}%'""")
+        for loc in curr8:
+            user_country[uc]=loc[0]
+    data["user_country"]=user_country
+
     conn.close()
     return data
 

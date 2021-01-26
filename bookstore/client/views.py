@@ -230,6 +230,8 @@ def single_product(bookid):
 
     if request.method=='POST':
 
+        pickled_data=None
+
         user_id=request.form.get('user_id')
         user_rating= request.form.get('user_rating')
         book_id = request.form.get('book_id')
@@ -258,11 +260,11 @@ def single_product(bookid):
     #call to recommendation engine
     print(current_user.id)
 
-    user_id=current_user.id;
+    user_id=current_user.id
     pickle_file="filename.pickle"
     
-    with open(pickle_file,'rb') as infile:
-        pickled_data = pickle.load(infile)
+    pickle_in = open(pickle_file,"rb") 
+    pickled_data = pickle.load(pickle_in)
 
     out=None
     if user_id  not in pickled_data:
@@ -298,7 +300,7 @@ def logout():
 def personalized_offers():
         conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
         personalized_offers = pd.read_sql_query('SELECT us.id,us.email,us.name,us.location,of.discount,COUNT(*) AS Purchases FROM order_list o ,user us,offer of  WHERE us.id=o.user_id AND o.user_id=of.user_id  GROUP BY(o.user_id) HAVING Purchases>=3', conn) 
-        return render_template('test.html',data=personalized_offers)
+        return render_template('offers.html',data=personalized_offers)
 
 
 @login_manager.user_loader

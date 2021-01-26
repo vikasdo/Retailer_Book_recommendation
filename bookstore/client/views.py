@@ -258,7 +258,7 @@ def single_product(bookid):
 
     user_id=current_user.id;
     pickle_file="filename.pickle"
-    
+    pickled_data=None
     with open(pickle_file,'rb') as infile:
         pickled_data = pickle.load(infile)
 

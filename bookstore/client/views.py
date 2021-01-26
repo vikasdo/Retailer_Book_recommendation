@@ -316,5 +316,5 @@ def discounts():
     else:
         db.session.add(new_discount)
     db.session.commit()
-    flash(f'Discount Successfully Updated')
+    flash(f'Discount Successfully Updated','sucess')
     return redirect(url_for('personalized_offers'))

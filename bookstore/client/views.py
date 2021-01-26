@@ -262,9 +262,9 @@ def single_product(bookid):
 
     user_id=current_user.id
     pickle_file="filename.pickle"
-    
-    pickle_in = open(pickle_file,"rb") 
-    pickled_data = pickle.load(pickle_in)
+    pickled_data=None
+    with open(pickle_file,'rb') as infile:
+        pickled_data = pickle.load(infile)
 
     out=None
     if user_id  not in pickled_data:

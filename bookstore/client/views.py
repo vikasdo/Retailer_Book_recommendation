@@ -6,7 +6,7 @@ from datetime import datetime
 import pandas as pd
 import glob,json,re
 import os,pickle,collections
-from bookstore.models import User,Books,Ratings,OrderList
+from bookstore.models import User,Books,Ratings,OrderList,offer
 from bookstore import db, serializer, app
 from werkzeug.security import generate_password_hash
 from bookstore.client.recommendation_engine import Recommendation_engine
@@ -297,10 +297,24 @@ def logout():
 @app.route('/personalized_offers')
 def personalized_offers():
         conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
-        personalized_offers = pd.read_sql_query('SELECT us.id,us.email,us.name,us.location,COUNT(*) AS Purchases FROM order_list o ,user us WHERE us.id=o.user_id GROUP BY(o.user_id) HAVING Purchases>=3', conn) 
+        personalized_offers = pd.read_sql_query('SELECT us.id,us.email,us.name,us.location,of.discount,COUNT(*) AS Purchases FROM order_list o ,user us,offer of  WHERE us.id=o.user_id AND o.user_id=of.user_id  GROUP BY(o.user_id) HAVING Purchases>=3', conn) 
         return render_template('test.html',data=personalized_offers)
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+@app.route('/discounts',methods=['POST'])
+def discounts():
+    user_id = request.form["user-id"]
+    discount  = request.form["discount"]
+    new_discount =  offer(user_id=user_id,discount=discount)
+    stat = offer.query.filter_by(user_id=user_id).first()
+    if stat is not None:
+        stat.discount = discount
+    else:
+        db.session.add(new_discount)
+    db.session.commit()
+    flash(f'Discount Successfully Updated')
+    return redirect(url_for('personalized_offers'))

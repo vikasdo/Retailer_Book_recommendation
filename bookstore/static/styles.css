@@ -1,5 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
 body {
   background-color: #f3efee;
+}
+
+nav .logo{
+  font-family: 'Varela Round', sans-serif;
+  padding-left: 20px;
+  font-size: 60px;
 }
 
 .intro,

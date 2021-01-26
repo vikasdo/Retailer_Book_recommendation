@@ -164,6 +164,8 @@ def register():
         username = request.form['username']
         email =request.form['email']
         password = request.form['password']
+        age = request.form['age']
+        location = request.form['location']
 
         ok = User.query.filter_by(email=email).first()
 
@@ -172,7 +174,7 @@ def register():
             return redirect(url_for('login'))
 
         new_user =  User(name=username,email=email,
-                        password=generate_password_hash(password, method='sha256'))
+                        password=generate_password_hash(password, method='sha256'),location=location,age=age)
         db.session.add(new_user)
         db.session.commit()
         flash(f'Account Created for {username}','success')
@@ -228,6 +230,8 @@ def single_product(bookid):
 
     if request.method=='POST':
 
+        pickled_data=None
+
         user_id=request.form.get('user_id')
         user_rating= request.form.get('user_rating')
         book_id = request.form.get('book_id')
@@ -256,9 +260,9 @@ def single_product(bookid):
     #call to recommendation engine
     print(current_user.id)
 
-    user_id=current_user.id;
+    user_id=current_user.id
     pickle_file="filename.pickle"
-    
+    pickled_data=None
     with open(pickle_file,'rb') as infile:
         pickled_data = pickle.load(infile)
 
@@ -298,7 +302,7 @@ def logout():
 def personalized_offers():
         conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
         personalized_offers = pd.read_sql_query('SELECT us.id,us.email,us.name,us.location,of.discount,COUNT(*) AS Purchases FROM order_list o ,user us,offer of  WHERE us.id=o.user_id AND o.user_id=of.user_id  GROUP BY(o.user_id) HAVING Purchases>=3', conn) 
-        return render_template('test.html',data=personalized_offers)
+        return render_template('offers.html',data=personalized_offers)
 
 
 @login_manager.user_loader

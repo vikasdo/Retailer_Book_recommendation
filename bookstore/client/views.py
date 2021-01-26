@@ -28,10 +28,23 @@ login_manager.init_app(app)
 @app.route('/')
 @login_required
 def home():
-    books = Books.query.limit(15).all()
+    books = Books.query.limit(18).all()
     return  render_template("client/index.html",books=books)
 
 
+#route to get discounted users list
+
+@app.route('/getDiscountedUsers')
+def getDiscount():
+    data = offer.query.all()
+
+    imp_data={}
+    for x in data:
+        imp_data.update(x.get_json())
+
+
+
+    return jsonify(imp_data)
 
 
 # returns JSON Object as response
@@ -300,6 +313,12 @@ def logout():
 
 @app.route('/personalized_offers')
 def personalized_offers():
+        data = offer.query.all()
+        imp_data={}
+        for x in data:
+            imp_data.update(x.get_json())
+        print(jsonify(imp_data))
+
         conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
         personalized_offers = pd.read_sql_query('SELECT us.id,us.email,us.name,us.location,of.discount,COUNT(*) AS Purchases FROM order_list o ,user us,offer of  WHERE us.id=o.user_id AND o.user_id=of.user_id  GROUP BY(o.user_id) HAVING Purchases>=3', conn) 
         return render_template('offers.html',data=personalized_offers)
@@ -320,5 +339,5 @@ def discounts():
     else:
         db.session.add(new_discount)
     db.session.commit()
-    flash(f'Discount Successfully Updated','sucess')
+    flash(f'Discount Successfully Updated','success')
     return redirect(url_for('personalized_offers'))

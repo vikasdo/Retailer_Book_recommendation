@@ -1,6 +1,31 @@
 {% extends 'adminheader.html' %}
 {% block content %}
 <div class="container-xl">
+
+<div class="d-flex flex-wrap justify-content-center">
+  <div class="col-lg-6 errors">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages  %}
+  {% for category,msg in messages %}
+  
+  {% if category == 'error' %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {% else %}
+      <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+    {% endif %}
+      
+      <strong>{{msg}}</strong>
+      
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+</div>
+</div>
+	
 	<div class="table-responsive">
 		<div class="table-wrapper">
 			<div class="table-title">

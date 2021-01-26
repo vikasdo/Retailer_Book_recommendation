@@ -43,6 +43,9 @@ class offer(db.Model):
 	user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
 	discount=db.Column(db.Integer,default=0,nullable=False)
 
+	def get_json(self):
+		return { self.user_id:self.discount}
+
 class Ratings(db.Model): 
 	rid = db.Column(db.Integer,primary_key=True)
 	rating = db.Column(db.Integer,default=0) 

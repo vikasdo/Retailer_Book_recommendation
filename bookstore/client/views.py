@@ -25,12 +25,25 @@ login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 
+def helper():
+    return User.query.filter_by(id=current_user.id).first()
+
 @app.route('/')
 @login_required
 def home():
+    transactions=[]
+    conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
+    cur = conn.execute('SELECT * FROM order_list WHERE user_id=(?)',(current_user.id,))
+    for i in cur:
+        transactions.append(i)
+    
     books = Books.query.limit(18).all()
-    ok = User.query.filter_by(id=current_user.id).first()
-    return  render_template("client/index.html",books=books,profile=ok)
+    #transactions = OrderList.query.filter_by(user_id=current_user.id)
+    
+    if len(transactions)!=0:
+        return  render_template("client/index.html",books=books,profile=helper(),transactions=transactions)
+    else:
+        return  render_template("client/index.html",books=books,profile=helper(),transactions=transactions)
 
 
 #route to get discounted users list
@@ -296,26 +309,17 @@ def single_product(bookid):
     print(out.columns)
     #print(out["imageUrlL"])
 
-    return render_template('client/single.html',books=books,suggestedBooks=out)
+    return render_template('client/single.html',books=books,suggestedBooks=out,profile=helper())
 
 
-@app.route('/myprofile',methods=["GET","POST"])
+@app.route('/myprofile',methods=['POST'])
 @login_required
 def myprofile():
-
-
+    password = request.form["password"]
     ok = User.query.filter_by(id=current_user.id).first()
-
-    print(ok)
-
-    if request.method=="POST":
-        password = request.form.get("password")
-        print(password,ok.password)
-        ok.password=password
-        print(ok.password)
-        flash(f'Profile Updated Successfully','success')
-
-
+    ok.password=password
+    flash(f'Profile Updated Successfully','success')
+    db.session.commit()
     return redirect(url_for('home'))
 
 @app.route('/logout')

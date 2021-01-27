@@ -26,7 +26,15 @@ login_manager.init_app(app)
 
 
 def helper():
-    return User.query.filter_by(id=current_user.id).first()
+
+
+    transactions=[]
+    conn = sqlite3.connect(app.config["SQLITE_DB_DIR"])
+    cur = conn.execute('SELECT * FROM order_list WHERE user_id=(?)',(current_user.id,))
+    for i in cur:
+        transactions.append(i)
+
+    return User.query.filter_by(id=current_user.id).first(),transactions
 
 @app.route('/')
 @login_required
@@ -39,11 +47,11 @@ def home():
     
     books = Books.query.limit(18).all()
     #transactions = OrderList.query.filter_by(user_id=current_user.id)
-    
+
     if len(transactions)!=0:
-        return  render_template("client/index.html",books=books,profile=helper(),transactions=transactions)
+        return  render_template("client/index.html",books=books,profile=helper()[0],transactions=helper()[1])
     else:
-        return  render_template("client/index.html",books=books,profile=helper(),transactions=transactions)
+        return  render_template("client/index.html",books=books,profile=helper()[0],transactions=helper()[1])
 
 
 #route to get discounted users list
@@ -309,7 +317,8 @@ def single_product(bookid):
     print(out.columns)
     #print(out["imageUrlL"])
 
-    return render_template('client/single.html',books=books,suggestedBooks=out,profile=helper())
+
+    return render_template('client/single.html',books=books,suggestedBooks=out,profile=helper()[0],transactions=helper()[1])
 
 
 @app.route('/myprofile',methods=['POST'])

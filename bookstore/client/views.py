@@ -310,8 +310,9 @@ def myprofile():
 
     if request.method=="POST":
         password = request.form.get("password")
-        print(password)
+        print(password,ok.password)
         ok.password=password
+        print(ok.password)
         flash(f'Profile Updated Successfully','success')
 
 

@@ -29,7 +29,8 @@ login_manager.init_app(app)
 @login_required
 def home():
     books = Books.query.limit(18).all()
-    return  render_template("client/index.html",books=books)
+    ok = User.query.filter_by(id=current_user.id).first()
+    return  render_template("client/index.html",books=books,profile=ok)
 
 
 #route to get discounted users list
@@ -280,12 +281,12 @@ def single_product(bookid):
         pickled_data = pickle.load(infile)
 
     out=None
-    if user_id  not in pickled_data:
+    if user_id:#  not in pickled_data:
         Recommendation_engine_obj=Recommendation_engine()
         out=Recommendation_engine_obj.getRecommendedBooks(user_id)
         pickled_data[user_id]=out
-    else:
-        out=pickled_data[user_id]
+    #else:
+    #   out=pickled_data[user_id]
        
     filename = "filename.pickle"
     outfile = open(filename,'wb')
@@ -293,14 +294,28 @@ def single_product(bookid):
     outfile.close()
 
     print(out.columns)
+    #print(out["imageUrlL"])
 
     return render_template('client/single.html',books=books,suggestedBooks=out)
 
 
-@app.route('/myprofile')
+@app.route('/myprofile',methods=["GET","POST"])
 @login_required
 def myprofile():
-    return render_template('client/login.html')
+
+
+    ok = User.query.filter_by(id=current_user.id).first()
+
+    print(ok)
+
+    if request.method=="POST":
+        password = request.form.get("password")
+        print(password)
+        ok.password=password
+        flash(f'Profile Updated Successfully','success')
+
+
+    return redirect(url_for('home'))
 
 @app.route('/logout')
 @login_required
